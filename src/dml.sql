@@ -206,3 +206,4 @@ select sum(2025- cast(age as int )) as sum_age from people;
 select max(cast(age as int)) as man_age from people;
 --#10
 select people.gender, avg(2025-cast(age as int)) age_crendni from people group by gender;
+--#11
