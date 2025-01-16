@@ -183,27 +183,84 @@ values (99, 'Zena', 'Vasyuchov', 'zvasyuchov2q@networkadvertising.org', 'Female'
 insert into people (id, first_name, last_name, email, gender, age, language)
 values (100, 'Filbert', 'Dewing', 'fdewing2r@ftc.gov', 'Male', 1993, 'Bislama');
 
---#1
+--todo 1. Вывести все строки из таблицы
 select * from people ;
---#2
+--todo 2. Обновить электронную почту конкретного человека (например, человека с id=1)
 update people set email='baiel@gmail.com' where id = 2;
 select * from people  where id= 2;
---#3
+--todo 3. Удалить человека из таблицы (например, человека с id=10)
 insert into people (id, first_name, last_name, email, gender, age, language)
 values (101, 'Sagyn', 'sagyn@gmail.com', 'sagyn@gmail.com', 'Male', 1995, 'kyrgyz');
---#4
+--todo 4. Удалить человека из таблицы (например, человека с id=10)
 delete from people where id=101;
 select * from people  where id= 101;
---#5
+--todo 5. Подсчитать общее количество людей
 select count(people.id) from people;
---#6
+--todo 6. Рассчитать средний возраст всех людей
 select 2025 - avg(cast(age as int)) as avg_age from people;
---#7
+--todo 7. Найти максимальный возраст среди всех людей
 select 2025-min(cast(age as int)) as max_age from people;
---#8
+--todo 8. Сумма возрастов всех людей
 select sum(2025- cast(age as int )) as sum_age from people;
---#9
-select max(cast(age as int)) as man_age from people;
---#10
+--todo 9. Получить самого молодого человека(людей)
+select * from people
+where cast(age as int)=(select max(cast(age as int))from people);
+--todo 10 Сгруппировать людей по полу и рассчитать средний возраст для каждого пола
 select people.gender, avg(2025-cast(age as int)) age_crendni from people group by gender;
---#11
+-- 11. todo  Вывести имя в год рождение людей которые говорят на английском языке
+select first_name, age ,language from people where language = 'English';
+-- 12. todo  Посчитать сколько человек, говорящих на казахском(Kazakh)
+select  first_name,  count(language) from people where language = 'Kazakh' group by first_name;
+-- 13. todo  Вывести фамилии, почту и айди всех женщин
+select last_name,email,id ,gender from people where gender = 'Female';
+-- 14. todo  Вывести имя и фамилие вместе переименовав
+--  todo  как full_name(concat as), пол и год рождение всех мужчин родившихся после 2000 года
+select concat(first_name, ' ',last_name) as full_Name, gender,age
+from people where cast(age as int) > 2000 and gender = 'Male';
+--todo 15. Посчитать сколько всего имен из таблицы начинаются на букву А
+select * from people where first_name ilike 'A%' ;
+--todo 16. Отсартируйте все почты в алфавитном порядке
+select * from people order by email asc ;
+-- todo 17. Вывести 20 записей пропустив первые 5 записи
+select * from people order by id asc offset 5 limit 15;
+-- todo 18. Подсчитать количество людей для каждого языка
+select people.language,count(people.language) from people group by language;
+-- todo 19. Найти средний возраст для каждого языка, где количество людей больше 2
+--todo 20. Вывести количество записей где почта закончивается на .com
+select count(email) from people where email ilike '%.com';
+-- todo 21. Найти самый распространенный язык среди женщин;
+select language,count(people.language)
+from people where gender ilike 'Female' group by language order by count(people.language) desc limit 1;
+-- todo 22. Обновить язык для людей, чей возраст между 13 и 20 годами, на 'French'
+update people set language = 'French' where (2025-cast(age as int)) between 13 and 20;
+-- todo 23. Отобразите всех мужчин говорящих на Tamil, Kazakh, Nepali и Russian
+select * from people where  language in ('Tamil','Kazakh', 'Russian');
+-- todo 24. Сгруппируте всех по языку на котором они говорят
+    select p.language , count(p.language)from people p group by language;
+-- todo 25. Отобразите записи фамилии которых содержат только 7 символов и отсортируйте их по айди
+select people.last_name from people where length(last_name)=7;
+-- todo 26. Отобразите все записи кроме говорящих на French языке
+    select p.language from people p where language != ' French';
+-- todo 27. Отобразите 5 самых молодых людей у которых почта заканчивается .com
+select * from people
+where cast(age as int)=(select max(cast(age as int))from people
+where email like '%.com');
+-- todo 28. Отобразите только те записи из таблицы которым есть 18 и которых
+--  почта заканчивается на .com или .uk SQL(DML) 3
+select * from people p where (2025-cast(age as int))>= 18 and (p.email ilike '%.com'or p.email ilike '%.uk');
+-- todo 29. Отобразите все записи, кроме родившихся  1993 по 2000 года
+    select * from people where cast(age as int) not  between 1993 and 2000;
+    -- todo 30. Отобразите уникальные языки
+select distinct people.language from people;
+-- todo 31. Отобразите записи где в имени или в фамилии есть буква ‘a’ и год
+--  рождение с 1969 по 2005 год
+select * from people where (first_name ilike '%a%' or last_name ilike '%a%')
+                       and CAST(age as int) between 1969 and 2005;
+-- todo 32. Отобразите айди, имя, почту и возврст каждого человека и отсортируйте
+--  по возврасту в убывающем порядке
+select id, first_name, email, (2025 - CAST(age as int)) as age
+from people
+order by age desc ;
+-- todo 33. Удалить людей младще 13 лет
+delete from people
+where (2025 - CAST(age as int )) < 13;
