@@ -1,0 +1,4 @@
+--#1
+-- select c.City,count(c.City) as counts  from Customers c  group by c.City ;
+--#2
+--select * from Employees s where s.BirthDate between 01/01/1950 and 01/01/1960;

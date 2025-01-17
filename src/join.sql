@@ -69,6 +69,27 @@ INSERT INTO salaries (salary_amount, effective_date)
 VALUES (10000, '2025-01-01'),
        ( 70000, '2025-01-01'),
        ( 120000, '2025-01-01');
+select s.salary_amount  from salaries s order by s.salary_amount desc limit 6;
+--####
+select e.first_name,max(length(e.first_name))
+from employees e where length(e.first_name) =
+ ( select max(length(e.first_name)) from employees e) group by e.first_name ;
+
+
+select
+case
+    when count(d.id)>0
+then true
+else false
+end as exists
+    from departments d;
+select
+    case
+        when count(d.id)>0
+            then 'bar'
+        else 'jok'
+        end as exists
+from departments d;
 --#1
 select e.first_name,d.name
 from employees e  join  departments d on e.department_id = d.id;
@@ -121,51 +142,107 @@ from employees e  join salaries s on e.id = s.employee_id
 --todo Вывести все департаменты из таблицы departments. Show all departments from the departments table.
 -- Кыргыча: departments таблицасынан бардык бөлүмдөрдү көрсөтүңүз.
     select  departments.name from departments;
+select distinct departments.name from departments;
 -- todo Вывести имена и фамилии всех сотрудников. Show the first name and last name of all employees.
 --  Кыргыча: Бардык кызматкерлердин ысымдары жана фамилияларын көрсөтүңүз.
-
--- Найти всех сотрудников, которые работают в департаменте "HR". Find all employees who work in the "HR" department.
--- Кыргыча: "HR" бөлүмүндө иштеген бардык кызматкерлерди табыңыз.
--- Найти сотрудников, чьи зарплаты больше 50,000. Find employees whose salary is greater than 50,000.
+select employees.first_name,employees.last_name from employees;
+-- todo Найти всех сотрудников, которые работают в департаменте "HR". Find all employees who work in the "HR" department.
+--   Кыргыча: "HR" бөлүмүндө иштеген бардык кызматкерлерди табыңыз.
+select e.first_name, d.name
+    from employees e join departments d on d.id = e.department_id
+where d.name = 'HR';
+--todo Найти сотрудников, чьи зарплаты больше 50,000. Find employees whose salary is greater than 50,000.
 -- Кыргыча: Айлык акысы 50,000ден жогору болгон кызматкерлерди табыңыз.
--- Вывести имя и фамилию сотрудника с самой высокой зарплатой. Show the first name and last name of the employee with the highest salary.
--- Кыргыча: Эң жогорку айлык алган кызматкердин ысымын жана фамилиясын көрсөтүңүз.
--- Вывести все зарплаты для сотрудника с id = 1. Show all salaries for the employee with id = 1.
--- Кыргыча: ID = 1 болгон кызматкердин бардык айлыктарын көрсөтүңүз.
--- Вывести все департаменты, в которых работают сотрудники. Show all departments where employees work.
--- Кыргыча: Кызматкерлер иштеген бардык бөлүмдөрдү көрсөтүңүз.
--- Найти всех сотрудников, у которых зарплата меньше 40,000. Find all employees whose salary is less than 40,000.
--- Кыргыча: Айлыгы 40,000ден төмөн болгон кызматкерлерди табыңыз.
--- Вывести всех сотрудников, работающих в департаменте "Marketing". Show all employees working in the "Marketing" department.
--- Кыргыча: "Marketing" бөлүмүндө иштеген бардык кызматкерлерди көрсөтүңүз.
--- Посчитать количество сотрудников в таблице employees. Count the number of employees in the employees table.
--- Кыргыча: employees таблицасындагы кызматкерлердин санын эсептеңиз.
--- Medium Tasks (Средние задачи / Орто деңгээл тапшырмалар):
--- Посчитать количество сотрудников в каждом департаменте. Count the number of employees in each department.
--- Кыргыча: Ар бир бөлүмдө канча кызматкер бар экенин эсептеңиз.
--- Найти департамент с наибольшим количеством сотрудников. Find the department with the most employees.
--- Кыргыча: Көп кызматкери бар бөлүмдү табыңыз.
--- Посчитать среднюю зарплату по всем сотрудникам. Count the average salary of all employees.
+select e.first_name, s.salary_amount
+from employees e join salaries s on e.id = s.employee_id
+where salary_amount>50000;
+-- todo Вывести имя и фамилию сотрудника с самой высокой зарплатой. Show the first name and last name of the employee with the highest salary.
+--  Кыргыча: Эң жогорку айлык алган кызматкердин ысымын жана фамилиясын көрсөтүңүз.
+select e.first_name, s.salary_amount
+from employees e join salaries s on e.id = s.employee_id
+order by salary_amount desc limit 1;
+
+-- todo Вывести все зарплаты для сотрудника с id = 1. Show all salaries for the employee with id = 1.
+--   Кыргыча: ID = 1 болгон кызматкердин бардык айлыктарын көрсөтүңүз.
+select s.salary_amount,e.first_name from salaries s join employees e on e.id = s.employee_id
+where e.id = 1;
+select s.salary_amount from salaries s
+where s.employee_id =1;
+-- todo Вывести все департаменты, в которых работают сотрудники. Show all departments where employees work.
+--   Кыргыча: Кызматкерлер иштеген бардык бөлүмдөрдү көрсөтүңүз.
+    select * from departments d  join employees e on d.id = e.department_id;
+select distinct d.name from departments d join employees e on d.id = e.department_id;
+-- todo Найти всех сотрудников, у которых зарплата меньше 40,000. Find all employees whose salary is less than 40,000.
+--  Кыргыча: Айлыгы 40,000ден төмөн болгон кызматкерлерди табыңыз.
+select e.first_name, s.salary_amount
+from employees e join salaries s on e.id = s.employee_id
+where salary_amount<40000;
+-- todo Вывести всех сотрудников, работающих в департаменте "Marketing". Show all employees working in the "Marketing" department.
+--  Кыргыча: "Marketing" бөлүмүндө иштеген бардык кызматкерлерди көрсөтүңүз.
+    select e.first_name,e.last_name ,d.name from employees e  join departments d on d.id = e.department_id
+    where d.name ='Marketing';
+-- todo Посчитать количество сотрудников в таблице employees. Count the number of employees in the employees table.
+--  Кыргыча: employees таблицасындагы кызматкерлердин санын эсептеңиз.
+    select count(*) from employees;
+-- todo Medium Tasks (Средние задачи / Орто деңгээл тапшырмалар):
+
+-- todo  Посчитать количество сотрудников в каждом департаменте. Count the number of employees in each department.
+--  Кыргыча: Ар бир бөлүмдө канча кызматкер бар экенин эсептеңиз.
+    select d.name,count(e.id) from departments d join employees e on d.id = e.department_id
+    group by d.name ;
+-- todo Найти департамент с наибольшим количеством сотрудников. Find the department with the most employees.
+--  Кыргыча: Көп кызматкери бар бөлүмдү табыңыз.
+select d.name,count(e.id) from departments d join employees e on d.id = e.department_id
+group by d.name order by count(e.id) desc limit 1;
+--todo  Посчитать среднюю зарплату по всем сотрудникам. Count the average salary of all employees.
 -- Кыргыча: Бардык кызматкерлердин орточо айлыгын эсептеңиз.
--- Найти всех сотрудников, чья зарплата была обновлена с 2025-01-01. Find all employees whose salary was updated from 2025-01-01.
--- Кыргыча: 2025-01-01ден тартып айлыгы жаңыртылган бардык кызматкерлерди табыңыз.
--- Найти всех сотрудников, у которых нет зарплаты в таблице salaries. Find all employees who do not have a salary in the salaries table.
--- Кыргыча: salaries таблицасында айлыгы жок болгон кызматкерлерди табыңыз.
--- Вывести список всех сотрудников и их зарплат с сортировкой по зарплате. Show all employees and their salaries, sorted by salary.
--- Кыргыча: Бардык кызматкерлерди жана алардын айлыктарын айлыктар боюнча сорттолгон тизмеде көрсөтүңүз.
--- Вывести сотрудников, работающих в департаменте "Finance" и с зарплатой выше 45,000. Show employees working in the "Finance" department with a salary above 45,000.
--- Кыргыча: "Finance" бөлүмүндө иштеп, айлыгы 45,000ден жогору болгон кызматкерлерди көрсөтүңүз.
--- Найти всех сотрудников, у которых нет департамента. Find all employees who do not belong to any department.
--- Кыргыча: Департаментке таандык эмес бардык кызматкерлерди табыңыз.
--- Найти департамент с наименьшей средней зарплатой среди сотрудников. Find the department with the lowest average salary among its employees.
--- Кыргыча: Кызматкерлеринин орточо айлыгы эң төмөн болгон бөлүмдү табыңыз.
--- Посчитать общее количество сотрудников по каждой зарплатной категории (менее 40,000, 40,000-60,000, более 60,000). Count the total number of employees in each salary category (less than 40,000, 40,000-60,000, more than 60,000).
--- Кыргыча: Ар бир айлык категориясы боюнча (40,000ден аз, 40,000-60,000, 60,000ден жогору) кызматкерлердин жалпы санын эсептеңиз.
--- Hard Tasks (Трудные задачи / Кыйын тапшырмалар):
--- Найти сотрудников с самой высокой и самой низкой зарплатой в каждом департаменте. Find the highest and lowest salaried employees in each department.
--- Кыргыча: Ар бир бөлүмдө эң жогорку жана эң төмөнкү айлык алган кызматкерлерди табыңыз.
--- Вывести список сотрудников с их департаментами и зарплатами, упорядоченными по департаменту и зарплате. Show a list of employees with their departments and salaries, ordered by department and salary.
--- Кыргыча: Кызматкерлерди, алардын департаменттерин жана айлыктарын бөлүм жана айлык боюнча упорядочуланган тизмеде көрсөтүңүз.
+    select avg(s.salary_amount) from employees e join salaries s on e.id = s.employee_id;
+-- todo Найти всех сотрудников, чья зарплата была обновлена с 2025-01-01. Find all employees whose salary was updated from 2025-01-01.
+--  Кыргыча: 2025-01-01ден тартып айлыгы жаңыртылган бардык кызматкерлерди табыңыз.
+update salaries  set salary_amount= 70000 where id = 2;
+-- todo Найти всех сотрудников, у которых нет зарплаты в таблице salaries. Find all employees who do not have a salary in the salaries table.
+--  Кыргыча: salaries таблицасында айлыгы жок болгон кызматкерлерди табыңыз.
+    select * from employees e left join salaries s on e.id = s.employee_id
+    where s.employee_id is null;
+select * from employees e where e.id in (
+                          select s.employee_id from salaries s where s.employee_id is null);
+-- todo Вывести список всех сотрудников и их зарплат с сортировкой по зарплате. Show all employees and their salaries, sorted by salary.
+--  Кыргыча: Бардык кызматкерлерди жана алардын айлыктарын айлыктар боюнча сорттолгон тизмеде көрсөтүңүз.
+select s.salary_amount,e.first_name from employees e  join salaries s on e.id = s.employee_id
+order by salary_amount ;
+-- todo Вывести сотрудников, работающих в департаменте "Finance" и с зарплатой выше 45,000. Show employees working in the "Finance" department with a salary above 45,000.
+--  Кыргыча: "Finance" бөлүмүндө иштеп, айлыгы 45,000ден жогору болгон кызматкерлерди көрсөтүңүз.
+select s.salary_amount,e.first_name, d.name from employees e  join salaries s on e.id = s.employee_id
+join departments d on d.id = e.department_id where d.name= 'Finance' and s.salary_amount> 44500;
+--todo  Найти всех сотрудников, у которых нет департамента. Find all employees who do not belong to any department.
+--  Кыргыча: Департаментке таандык эмес бардык кызматкерлерди табыңыз.
+    select e.first_name,d.name from employees e left join departments d on d.id = e.department_id
+    where e.department_id is null;
+-- todo Найти департамент с наименьшей средней зарплатой среди сотрудников. Find the department with the lowest average salary among its employees.
+--  Кыргыча: Кызматкерлеринин орточо айлыгы эң төмөн болгон бөлүмдү табыңыз.
+    select
+    *
+
+    from employees e ;
+-- todo Посчитать общее количество сотрудников по каждой зарплатной категории (менее 40,000, 40,000-60,000, более 60,000). Count the total number of employees in each salary category (less than 40,000, 40,000-60,000, more than 60,000).
+--  Кыргыча: Ар бир айлык категориясы боюнча (40,000ден аз, 40,000-60,000, 60,000ден жогору) кызматкерлердин жалпы санын эсептеңиз.
+    select
+        case
+            when s.salary_amount <40000 then '40,000ден аз'
+            when s.salary_amount between 40000 and 60000 then '40,000-60,000'
+            else ' 60,000ден жогору'
+    end salary_cat, count(*)
+    from employees e
+  join salaries s on e.id = s.employee_id group by salary_cat;
+
+
+-- todo Hard Tasks (Трудные задачи / Кыйын тапшырмалар):
+--  Найти сотрудников с самой высокой и самой низкой зарплатой в каждом департаменте. Find the highest and lowest salaried employees in each department.
+--  Кыргыча: Ар бир бөлүмдө эң жогорку жана эң төмөнкү айлык алган кызматкерлерди табыңыз.
+
+-- todo Вывести список сотрудников с их департаментами и зарплатами, упорядоченными по департаменту и зарплате. Show a list of employees with their departments and salaries, ordered by department and salary.
+--   Кыргыча: Кызматкерлерди, алардын департаменттерин жана айлыктарын бөлүм жана айлык боюнча упорядочуланган тизмеде көрсөтүңүз.
+
 -- Найти сотрудников с зарплатой выше средней по всем сотрудникам. Find employees whose salary is higher than the average salary of all employees.
 -- Кыргыча: Бардык кызматкерлердин орточо айлыгын ашык кызматкерлерди табыңыз.
 -- Для каждого департамента вывести сотрудников с зарплатой больше средней по департаменту. For each department, show employees with salaries higher than the department’s average salary.
